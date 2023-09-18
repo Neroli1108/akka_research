@@ -36,14 +36,14 @@ namespace customized_mailbox_and_dispatchers_akka.src.Models.PriorityBasedAkka.P
             }
         }
 
-        public bool TryDequeue(out Envelope? envelope)
+        public bool TryDequeue(out Envelope envelope)
         {
             if (_queue.Any())
             {
                 envelope = _queue.Dequeue();
                 return true;
             }
-            envelope = null;
+            envelope = default(Envelope);
             return false;
         }
 
