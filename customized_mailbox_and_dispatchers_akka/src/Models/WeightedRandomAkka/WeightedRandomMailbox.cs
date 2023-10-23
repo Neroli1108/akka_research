@@ -16,17 +16,17 @@ namespace customized_mailbox_and_dispatchers_akka.src.Models.WeightedRandomAkka
         {
         }
 
-        protected void EnqueueFirst(in Envelope envelope)
+        public void EnqueueFirst(in Envelope envelope)
         {
             _queue.AddFirst(envelope);
         }
 
-        protected void Enqueue(in Envelope envelope)
+        public void Enqueue(in Envelope envelope)
         {
             _queue.AddLast(envelope);
         }
 
-        protected bool HasMessages => _queue.Count > 0;
+        public bool HasMessages => _queue.Count > 0;
 
         public bool TryDequeue(out Envelope envelope)
         {
@@ -63,11 +63,13 @@ namespace customized_mailbox_and_dispatchers_akka.src.Models.WeightedRandomAkka
             return default(Envelope);
         }
 
-        protected void CleanUp(ActorCell owner, bool aboutToTerminate)
+        public void CleanUp(ActorCell owner, bool aboutToTerminate)
         {
-            foreach (var envelope in _queue)
-            {
-                owner.System.DeadLetters.Tell(envelope);
+            if (owner?.System?.DeadLetters != null) {
+                foreach (var envelope in _queue)
+                {
+                    owner.System.DeadLetters.Tell(envelope);
+                }
             }
             _queue.Clear();
         }
